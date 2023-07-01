@@ -1,6 +1,6 @@
-import { navOptions, title } from '@constants/header';
 import Link from 'next/link';
-import React from 'react';
+
+import { navOptions, title } from '@constants/header';
 
 function Header() {
   return (
