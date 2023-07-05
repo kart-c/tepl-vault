@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { FormEventHandler, useState } from 'react';
 
 type LoginResponse = {
@@ -8,11 +9,15 @@ type LoginResponse = {
 };
 
 function Login() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
+  const router = useRouter();
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
+
+    setIsLoading(false);
 
     const formData = new FormData(form);
     const formEntries = Object.fromEntries(formData.entries());
@@ -26,7 +31,7 @@ function Login() {
       const data: LoginResponse = await response.json();
 
       if (data.status === 200) {
-        console.log({ data });
+        router.replace('/');
       } else {
         throw new Error(data?.message || 'Something went wrong!');
       }
@@ -35,6 +40,8 @@ function Login() {
       if (error instanceof Error) {
         setError(error);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -50,6 +57,7 @@ function Login() {
             id="username"
             type="text"
             required
+            disabled={isLoading}
           />
           <label htmlFor="password">Password</label>
           <input
@@ -58,8 +66,13 @@ function Login() {
             id="password"
             type="password"
             required
+            disabled={isLoading}
           />
-          <button type="submit" className="mt-7 btn-primary">
+          <button
+            type="submit"
+            className="mt-7 btn-primary"
+            disabled={isLoading}
+          >
             Login
           </button>
         </form>
