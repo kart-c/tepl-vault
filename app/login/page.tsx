@@ -1,6 +1,11 @@
 'use client';
+
 import { useRouter } from 'next/navigation';
 import { FormEventHandler, useState } from 'react';
+
+import { useAuth } from '@hooks/useAuth';
+import { ROUTES } from '@lib/routes';
+import { localStorageWithExpiry } from '@lib/localStorageWithExpiry';
 
 type LoginResponse = {
   role: string;
@@ -12,6 +17,8 @@ function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
   const router = useRouter();
+
+  const { logIn } = useAuth();
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -31,7 +38,10 @@ function Login() {
       const data: LoginResponse = await response.json();
 
       if (data.status === 200) {
-        router.replace('/');
+        const time = data.role === process.env.ROLE_ONE ? 14 : 45;
+        localStorageWithExpiry.set('role', data.role, time);
+        logIn();
+        router.replace(ROUTES.CHECKWEIGHER.STANDARD);
       } else {
         throw new Error(data?.message || 'Something went wrong!');
       }
@@ -52,6 +62,7 @@ function Login() {
         <form method="post" className="flex flex-col gap-4" onSubmit={onSubmit}>
           <label htmlFor="username">Username</label>
           <input
+            autoFocus
             className="input"
             name="username"
             id="username"
