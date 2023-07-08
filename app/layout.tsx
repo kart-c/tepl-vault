@@ -1,6 +1,7 @@
 import Header from '@/components/header';
 import './globals.css';
 import { Open_Sans } from 'next/font/google';
+import AuthContextProvider from '@context/auth-context';
 
 const openSans = Open_Sans({
   subsets: ['latin'],
@@ -22,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${openSans.variable} font-sans min-h-screen`}>
         <Header />
-        {children}
+        <AuthContextProvider>{children}</AuthContextProvider>
       </body>
     </html>
   );

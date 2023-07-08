@@ -8,7 +8,7 @@ const unauthorisedError = () =>
     { status: 401 }
   );
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   const { username, password } = await req.json();
 
   const { USER_ONE, USER_TWO } = process.env;

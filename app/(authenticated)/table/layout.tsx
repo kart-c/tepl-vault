@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useAuth } from '@hooks/useAuth';
 import { ROUTES } from '@lib/routes';
 
-export default function Home() {
+function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { isLoggedIn } = useAuth();
 
@@ -19,9 +19,7 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
-  return (
-    <main className="flex items-center justify-center main-height">
-      <div className="w-12 h-12 border-r-2 rounded-full border-r-gray-700 animate-spin" />
-    </main>
-  );
+  return children;
 }
+
+export default AuthenticatedLayout;
